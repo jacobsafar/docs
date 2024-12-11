@@ -1,33 +1,23 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introduction"
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+A [Baselined.ai](https://app.theneo.io/093fb6d6-e0f1-4bfa-b212-450b11d9bde1/baselined-ai/) account is required to create your API key for authorization. If you do not already have one, please [create an account](https://www.baselined.ai/register). Once registered, you will be able to view your API key on your [dashboard](https://www.baselined.ai/dashboard).
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
+<Card title="Developer Dashboard" icon="badge" color="blue" href="https://www.baselined.ai/dashboard">
+  Register for an account to get your API key. A credit card is required.
 </Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints are authenticated using API Keys. You can find your API Key on the [Baselined.ai Developer Dashboard](https://www.baselined.ai/dashboard).
 
 ```json
 "security": [
   {
-    "bearerAuth": []
+    "x-api-key": []
   }
 ]
 ```
