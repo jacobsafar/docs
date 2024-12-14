@@ -21,7 +21,7 @@
   "paths": {
     "/plants": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "description": "A Baselined.ai account is required to create your API key for authorization. If you do not already have one, please create an account. Once registered, you will be able to view your API key on your dashboard.",
         "parameters": [
           {
             "name": "limit",
