@@ -19,12 +19,12 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:support@baselined.ai"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://www.baselined.ai/dashboard"
   },
   "tabs": [
     {
