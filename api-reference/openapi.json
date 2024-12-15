@@ -90,8 +90,7 @@
                       "format": "uri",
                       "description": "URL of the analyzed image."
                     }
-                  },
-                  "required": ["ai_generated_score", "media_url"]
+                  }
                 },
                 "examples": {
                   "Success": {
@@ -342,8 +341,7 @@
                             "type": "integer",
                             "description": "The sentiment score assigned to this sentence by the AI."
                           }
-                        },
-                        "required": ["text", "score"]
+                        }
                       }
                     },
                     "input": {
@@ -358,8 +356,7 @@
                       "type": "integer",
                       "description": "The number of credits you have left in your account after your request has been processed."
                     }
-                  },
-                  "required": ["status", "score", "input", "credits_used", "credits_remaining"]
+                  }
                 },
                 "examples": {
                   "Success": {
@@ -533,8 +530,7 @@
                 "type": "integer",
                 "description": "Specific error code."
               }
-            },
-            "required": ["type", "message", "code"]
+            }
           }
         },
         "required": ["error"]
