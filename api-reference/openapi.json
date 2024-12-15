@@ -16,6 +16,9 @@
   "security": [
     {
       "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
     }
   ],
   "paths": {
@@ -206,6 +209,9 @@
         "security": [
           {
             "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
           }
         ]
       }
@@ -505,6 +511,9 @@
         "security": [
           {
             "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
           }
         ]
       }
@@ -542,6 +551,12 @@
         "in": "header",
         "name": "x-api-key",
         "description": "A unique key used for authentication to access the API."
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Standard Authorization header using the Bearer scheme. Example: 'Authorization: Bearer YOUR_API_KEY'"
       }
     }
   },
