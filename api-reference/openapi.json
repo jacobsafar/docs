@@ -93,7 +93,8 @@
                       "format": "uri",
                       "description": "URL of the analyzed image."
                     }
-                  }
+                  },
+                  "required": ["ai_generated_score", "media_url"]
                 },
                 "examples": {
                   "Success": {
@@ -330,8 +331,9 @@
                       "description": "This is a standard HTTP status code. A 200 status means the request was successful."
                     },
                     "score": {
-                      "type": "integer",
-                      "description": "A \"human\" score between 0 and 100. A low score means our system believes that the text is written by AI, and a higher score means that the system believes that the text is written by a Human."
+                      "type": "number",
+                      "format": "float",
+                      "description": "A \"human\" score between 0 and 1. A low score means our system believes that the text is written by AI, and a higher score means that the system believes that the text is written by a Human."
                     },
                     "sentences": {
                       "type": "array",
@@ -344,45 +346,39 @@
                             "description": "The text of the analyzed sentence."
                           },
                           "score": {
-                            "type": "integer",
+                            "type": "number",
+                            "format": "float",
                             "description": "The sentiment score assigned to this sentence by the AI."
                           }
-                        }
+                        },
+                        "required": ["text", "score"]
                       }
                     },
                     "input": {
                       "type": "string",
                       "description": "The type of input scanned based on the input provided. It can be `text`, `file`, or `website`."
-                    },
-                    "credits_used": {
-                      "type": "integer",
-                      "description": "The number of credits consumed for processing your request. Each word processed by the API consumes one credit."
-                    },
-                    "credits_remaining": {
-                      "type": "integer",
-                      "description": "The number of credits you have left in your account after your request has been processed."
                     }
-                  }
+                  },
+                  "required": ["status", "score", "input"],
+                  "additionalProperties": false
                 },
                 "examples": {
                   "Success": {
                     "summary": "Successful response",
                     "value": {
                       "status": 200,
-                      "score": 75,
+                      "score": 0.75,
                       "sentences": [
                         {
                           "text": "This is a sample sentence.",
-                          "score": 80
+                          "score": 0.80
                         },
                         {
                           "text": "Another example sentence.",
-                          "score": 70
+                          "score": 0.70
                         }
                       ],
-                      "input": "text",
-                      "credits_used": 100,
-                      "credits_remaining": 900
+                      "input": "text"
                     }
                   }
                 }
@@ -539,7 +535,8 @@
                 "type": "integer",
                 "description": "Specific error code."
               }
-            }
+            },
+            "required": ["type", "message", "code"]
           }
         },
         "required": ["error"]
