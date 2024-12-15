@@ -71,17 +71,14 @@
     {
       "group": "API Documentation",
       "pages": [
-        "api-reference/introduction",
-        "api-reference/image",
-        "api-reference/text"
+        "api-reference/introduction"
       ]
     },
     {
       "group": "Endpoint Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/endpoint/postImage",
+        "api-reference/endpoint/postText"
       ]
     }
   ],
