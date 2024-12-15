@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Baselined.ai API",
-    "description": "API documentation for Baselined.ai endpoints for detecting AI-generated content in images and text.",
+    "description": "Comprehensive API documentation for Baselined.ai endpoints, including image and text AI-generated content detection.",
     "license": {
       "name": "MIT"
     },
@@ -15,27 +15,58 @@
   ],
   "security": [
     {
-      "bearerAuth": []
+      "ApiKeyAuth": []
     }
   ],
   "paths": {
     "/image": {
       "post": {
-        "description": "Analyzes an image to determine the confidence that it is AI-generated.",
-        "parameters": [],
+        "summary": "Analyze an image to determine if it is AI-generated.",
+        "description": "Analyzes an image to determine the confidence that it is AI-generated. You can provide either an `image_url` or a `media` (base64-encoded image), but not both.",
+        "operationId": "analyzeImage",
+        "tags": ["Image Analysis"],
         "requestBody": {
-          "description": "Image to analyze.",
+          "description": "Image to analyze. Provide either `image_url` or `media`.",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "image_url": {
-                    "type": "string",
-                    "description": "URL of the image to analyze."
+                "oneOf": [
+                  {
+                    "required": ["image_url"],
+                    "properties": {
+                      "image_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL of the image to analyze."
+                      }
+                    }
+                  },
+                  {
+                    "required": ["media"],
+                    "properties": {
+                      "media": {
+                        "type": "string",
+                        "description": "Base64-encoded image data."
+                      }
+                    }
+                  }
+                ],
+                "additionalProperties": false
+              },
+              "examples": {
+                "ImageURL": {
+                  "summary": "Provide image URL",
+                  "value": {
+                    "image_url": "https://example.com/image.jpg"
                   }
                 },
-                "required": ["image_url"]
+                "Media": {
+                  "summary": "Provide base64-encoded image",
+                  "value": {
+                    "media": "iVBORw0KGgoAAAANSUhEUgAA..."
+                  }
+                }
               }
             }
           },
@@ -56,7 +87,18 @@
                     },
                     "media_url": {
                       "type": "string",
+                      "format": "uri",
                       "description": "URL of the analyzed image."
+                    }
+                  },
+                  "required": ["ai_generated_score", "media_url"]
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Successful response",
+                    "value": {
+                      "ai_generated_score": 0.85,
+                      "media_url": "https://example.com/media/image.jpg"
                     }
                   }
                 }
@@ -69,6 +111,28 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "MissingParameter": {
+                    "summary": "Missing required parameter",
+                    "value": {
+                      "error": {
+                        "type": "MissingParameterError",
+                        "message": "Either image_url or media is required",
+                        "code": 3002
+                      }
+                    }
+                  },
+                  "InvalidParameter": {
+                    "summary": "Invalid parameter provided",
+                    "value": {
+                      "error": {
+                        "type": "InvalidParameterError",
+                        "message": "Provide either image_url or media, not both",
+                        "code": 3003
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -79,19 +143,82 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Unauthorized": {
+                    "summary": "Invalid API key",
+                    "value": {
+                      "error": {
+                        "type": "UnauthorizedError",
+                        "message": "Unauthorized: Invalid API key",
+                        "code": 2001
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "InternalError": {
+                    "summary": "Internal server error",
+                    "value": {
+                      "error": {
+                        "type": "InternalError",
+                        "message": "An unexpected error occurred while processing your request.",
+                        "code": 9999
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "TimeoutError": {
+                    "summary": "Request timed out",
+                    "value": {
+                      "error": {
+                        "type": "TimeoutError",
+                        "message": "API request timed out",
+                        "code": 1005
+                      }
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
       }
     },
     "/text": {
       "post": {
-        "description": "Analyzes text to determine the confidence that it is AI-generated.",
-        "parameters": [],
+        "summary": "Analyze text to determine if it is AI-generated.",
+        "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided.",
+        "operationId": "analyzeText",
+        "tags": ["Text Analysis"],
         "requestBody": {
-          "description": "Text to analyze.",
+          "description": "Text to analyze along with optional parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -100,9 +227,72 @@
                   "text": {
                     "type": "string",
                     "description": "The text content to analyze."
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "URL or identifier for a file to analyze."
+                  },
+                  "website": {
+                    "type": "string",
+                    "description": "URL of the website to analyze."
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Version of the analysis model to use.",
+                    "default": "2.0"
+                  },
+                  "sentences": {
+                    "type": "boolean",
+                    "description": "Whether to analyze sentences individually.",
+                    "default": true
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Language of the text.",
+                    "default": "en"
                   }
                 },
-                "required": ["text"]
+                "oneOf": [
+                  {
+                    "required": ["text"]
+                  },
+                  {
+                    "required": ["file"]
+                  },
+                  {
+                    "required": ["website"]
+                  }
+                ],
+                "additionalProperties": false
+              },
+              "examples": {
+                "Text": {
+                  "summary": "Provide text for analysis",
+                  "value": {
+                    "text": "Your text content here."
+                  }
+                },
+                "File": {
+                  "summary": "Provide file for analysis",
+                  "value": {
+                    "file": "https://example.com/document.pdf"
+                  }
+                },
+                "Website": {
+                  "summary": "Provide website URL for analysis",
+                  "value": {
+                    "website": "https://example.com"
+                  }
+                },
+                "WithOptionalParameters": {
+                  "summary": "Provide text with optional parameters",
+                  "value": {
+                    "text": "Your text content here.",
+                    "version": "2.1",
+                    "sentences": false,
+                    "language": "es"
+                  }
+                }
               }
             }
           },
@@ -125,6 +315,16 @@
                       "type": "string",
                       "description": "The analyzed text content."
                     }
+                  },
+                  "required": ["ai_generated_score", "input_text"]
+                },
+                "examples": {
+                  "Success": {
+                    "summary": "Successful response",
+                    "value": {
+                      "ai_generated_score": 0.75,
+                      "input_text": "Your text content here."
+                    }
                   }
                 }
               }
@@ -136,6 +336,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "InvalidRequestFormat": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "error": {
+                        "type": "InvalidRequestFormat",
+                        "message": "Invalid request format",
+                        "code": 3001
+                      }
+                    }
+                  },
+                  "MissingParameter": {
+                    "summary": "Missing required parameter",
+                    "value": {
+                      "error": {
+                        "type": "MissingParameterError",
+                        "message": "Either text, file, or website is required.",
+                        "code": 3002
+                      }
+                    }
+                  },
+                  "InvalidParameter": {
+                    "summary": "Multiple parameters provided",
+                    "value": {
+                      "error": {
+                        "type": "InvalidParameterError",
+                        "message": "Provide either text, file, or website, not multiple.",
+                        "code": 3003
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -146,11 +378,72 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "Unauthorized": {
+                    "summary": "Invalid API key",
+                    "value": {
+                      "error": {
+                        "type": "UnauthorizedError",
+                        "message": "Unauthorized: Invalid API key",
+                        "code": 2001
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "InternalError": {
+                    "summary": "Internal server error",
+                    "value": {
+                      "error": {
+                        "type": "InternalError",
+                        "message": "An unexpected error occurred while processing your request.",
+                        "code": 9999
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "TimeoutError": {
+                    "summary": "Request timed out",
+                    "value": {
+                      "error": {
+                        "type": "TimeoutError",
+                        "message": "API request timed out",
+                        "code": 1005
+                      }
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
       }
     }
   },
@@ -159,27 +452,45 @@
       "Error": {
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string",
-            "description": "Error type."
-          },
-          "message": {
-            "type": "string",
-            "description": "Error message providing additional details."
-          },
-          "code": {
-            "type": "integer",
-            "description": "Specific error code."
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Error type."
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message providing additional details."
+              },
+              "code": {
+                "type": "integer",
+                "description": "Specific error code."
+              }
+            },
+            "required": ["type", "message", "code"]
           }
         },
-        "required": ["type", "message", "code"]
+        "required": ["error"]
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "A unique key used for authentication to access the API."
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Image Analysis",
+      "description": "Endpoints related to image AI-generated content detection."
+    },
+    {
+      "name": "Text Analysis",
+      "description": "Endpoints related to text AI-generated content detection."
+    }
+  ]
 }
