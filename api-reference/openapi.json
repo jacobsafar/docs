@@ -25,9 +25,23 @@
     "/image": {
       "post": {
         "summary": "Analyze an image to determine if it is AI-generated.",
-        "description": "Analyzes an image to determine the confidence that it is AI-generated. You can provide either an `image_url` or a `media` (base64-encoded image), but not both.",
+        "description": "Analyzes an image to determine the confidence that it is AI-generated. You can provide either an `image_url` or `media` (base64-encoded image), but not both.",
         "operationId": "analyzeImage",
-        "tags": ["Image Analysis"],
+        "tags": [
+          "Image Analysis"
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.baselined.ai/image\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"image_url\":\"https://example.com/image.jpg\"}'"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import requests\n\nurl = \"https://api.baselined.ai/image\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"image_url\": \"https://example.com/image.jpg\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
+          }
+        ],
         "requestBody": {
           "description": "Image to analyze. Provide either `image_url` or `media`.",
           "content": {
@@ -86,7 +100,7 @@
                     "ai_generated_score": {
                       "type": "number",
                       "format": "float",
-                      "description": "Confidence score that the image is AI-generated, ranging from 0 to 1."
+                      "description": "Confidence score that the image is AI-generated, ranging from 0 to 1. A higher score means the image is AI-generated."
                     },
                     "media_url": {
                       "type": "string",
@@ -94,7 +108,7 @@
                       "description": "URL of the analyzed image."
                     }
                   },
-                  "required": ["ai_generated_score", "media_url"]
+                  "additionalProperties": false
                 },
                 "examples": {
                   "Success": {
@@ -222,7 +236,21 @@
         "summary": "Analyze text to determine if it is AI-generated.",
         "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided. The priority is as follows: `website` > `file` > `text`.",
         "operationId": "analyzeText",
-        "tags": ["Text Analysis"],
+        "tags": [
+          "Text Analysis"
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "cURL",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.baselined.ai/text\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"text\":\"Your text content here.\"}'"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import requests\n\nurl = \"https://api.baselined.ai/text\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"text\": \"Your text content here.\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
+          }
+        ],
         "requestBody": {
           "description": "Text to analyze along with optional parameters. Provide either `text`, `file`, or `website`. If multiple are provided, the priority is `website` > `file` > `text`.",
           "content": {
@@ -236,16 +264,16 @@
                   },
                   "file": {
                     "type": "string",
-                    "description": "A file to scan. If you supply a file, the API will scan the content of the file. The file must be in plain .pdf, .doc or .docx format. The file has priority over the text, so if you give a text and a file, it's the file that will be scanned."
+                    "description": "A file to scan. The file must be in plain .pdf, .doc, or .docx format. Has higher priority than `text` if both are provided."
                   },
                   "website": {
                     "type": "string",
                     "format": "uri",
-                    "description": "A website URL to scan. If you supply a website, the API will fetch the content of the website and scan it. The website must be publicly accessible. It's important to know that the website has priority over the text and the file, so if you give a text, a file and a website, it's the website that will be scanned."
+                    "description": "A website URL to scan. Must be publicly accessible. Has the highest priority over `text` or `file`."
                   },
                   "version": {
                     "type": "string",
-                    "description": "The model version to use. Our latest and most accurate version is \"3.0\". Using \"latest\" will make sure you are always using the latest version. Options: 3.0, 2.0, latest.",
+                    "description": "The model version to use. \"latest\" always uses the latest version. Options: 3.0, 2.0, latest.",
                     "default": "2.0",
                     "enum": ["3.0", "2.0", "latest"]
                   },
@@ -256,7 +284,7 @@
                   },
                   "language": {
                     "type": "string",
-                    "description": "2 letter language code. Available languages: english (en), french (fr), spanish (es), portuguese (pt), netherlands (nl), german (de), and chinese simplified (zh).",
+                    "description": "2 letter language code. Supported: en, fr, es, pt, nl, de, zh.",
                     "default": "en",
                     "enum": ["en", "fr", "es", "pt", "nl", "de", "zh"]
                   }
@@ -328,16 +356,16 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "description": "This is a standard HTTP status code. A 200 status means the request was successful."
+                      "description": "HTTP status code indicating success (200)."
                     },
                     "score": {
                       "type": "number",
                       "format": "float",
-                      "description": "A \"human\" score between 0 and 1. A low score means our system believes that the text is written by AI, and a higher score means that the system believes that the text is written by a Human."
+                      "description": "Confidence score that the text is AI-generated, ranging from 0 to 1. A higher score means the text is AI-generated."
                     },
                     "sentences": {
                       "type": "array",
-                      "description": "An array of sentence objects. Each object contains two fields: text and score. Please note that assessments on smaller samples are less accurate than the general score.",
+                      "description": "An array of sentence objects with their respective AI-generated confidence scores.",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -348,18 +376,16 @@
                           "score": {
                             "type": "number",
                             "format": "float",
-                            "description": "The sentiment score assigned to this sentence by the AI."
+                            "description": "Confidence score that this sentence is AI-generated, ranging from 0 to 1."
                           }
-                        },
-                        "required": ["text", "score"]
+                        }
                       }
                     },
                     "input": {
                       "type": "string",
-                      "description": "The type of input scanned based on the input provided. It can be `text`, `file`, or `website`."
+                      "description": "The type of input scanned: `text`, `file`, or `website`."
                     }
                   },
-                  "required": ["status", "score", "input"],
                   "additionalProperties": false
                 },
                 "examples": {
@@ -367,15 +393,15 @@
                     "summary": "Successful response",
                     "value": {
                       "status": 200,
-                      "score": 0.75,
+                      "score": 0.90,
                       "sentences": [
                         {
                           "text": "This is a sample sentence.",
-                          "score": 0.80
+                          "score": 0.95
                         },
                         {
                           "text": "Another example sentence.",
-                          "score": 0.70
+                          "score": 0.85
                         }
                       ],
                       "input": "text"
