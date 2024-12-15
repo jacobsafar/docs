@@ -1,596 +1,596 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Baselined.ai API",
-    "description": "Comprehensive API documentation for Baselined.ai endpoints, including image and text AI-generated content detection.",
-    "license": {
-      "name": "MIT"
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Baselined.ai API",
+      "description": "Comprehensive API documentation for Baselined.ai endpoints, including image and text AI-generated content detection.",
+      "license": {
+        "name": "MIT"
+      },
+      "version": "1.0.0"
     },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "https://api.baselined.ai"
-    }
-  ],
-  "security": [
-    {
-      "ApiKeyAuth": []
-    },
-    {
-      "BearerAuth": []
-    }
-  ],
-  "paths": {
-    "/image": {
-      "post": {
-        "summary": "Analyze an image to determine if it is AI-generated.",
-        "description": "Analyzes an image to determine the confidence that it is AI-generated. You can provide either an `image_url` or `media` (base64-encoded image), but not both.",
-        "operationId": "analyzeImage",
-        "tags": [
-          "Image Analysis"
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "cURL",
-            "label": "cURL",
-            "source": "curl -X POST \"https://api.baselined.ai/image\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"image_url\":\"https://example.com/image.jpg\"}'"
-          },
-          {
-            "lang": "Python",
-            "label": "Python",
-            "source": "import requests\n\nurl = \"https://api.baselined.ai/image\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"image_url\": \"https://example.com/image.jpg\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
-          }
-        ],
-        "requestBody": {
-          "description": "Image to analyze. Provide either `image_url` or `media`.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "oneOf": [
-                  {
-                    "required": ["image_url"],
-                    "properties": {
-                      "image_url": {
-                        "type": "string",
-                        "format": "uri",
-                        "description": "URL of the image to analyze."
-                      }
-                    }
-                  },
-                  {
-                    "required": ["media"],
-                    "properties": {
-                      "media": {
-                        "type": "string",
-                        "description": "Base64-encoded image data."
-                      }
-                    }
-                  }
-                ],
-                "additionalProperties": false
-              },
-              "examples": {
-                "ImageURL": {
-                  "summary": "Provide image URL",
-                  "value": {
-                    "image_url": "https://example.com/image.jpg"
-                  }
-                },
-                "Media": {
-                  "summary": "Provide base64-encoded image",
-                  "value": {
-                    "media": "iVBORw0KGgoAAAANSUhEUgAA..."
-                  }
-                }
-              }
+    "servers": [
+      {
+        "url": "https://api.baselined.ai"
+      }
+    ],
+    "security": [
+      {
+        "ApiKeyAuth": []
+      },
+      {
+        "BearerAuth": []
+      }
+    ],
+    "paths": {
+      "/image": {
+        "post": {
+          "summary": "Analyze an image to determine if it is AI-generated.",
+          "description": "Analyzes an image to determine the confidence that it is AI-generated. You can provide either an `image_url` or `media` (base64-encoded image), but not both.",
+          "operationId": "analyzeImage",
+          "tags": [
+            "Image Analysis"
+          ],
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "cURL",
+              "source": "curl -X POST \"https://api.baselined.ai/image\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"image_url\":\"https://example.com/image.jpg\"}'"
+            },
+            {
+              "lang": "Python",
+              "label": "Python",
+              "source": "import requests\n\nurl = \"https://api.baselined.ai/image\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"image_url\": \"https://example.com/image.jpg\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
             }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "AI-generated image analysis result.",
+          ],
+          "requestBody": {
+            "description": "Image to analyze. Provide either `image_url` or `media`.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {
-                    "ai_generated_score": {
-                      "type": "number",
-                      "format": "float",
-                      "description": "Confidence score that the image is AI-generated, ranging from 0 to 1. A higher score means the image is AI-generated."
-                    },
-                    "media_url": {
-                      "type": "string",
-                      "format": "uri",
-                      "description": "URL of the analyzed image."
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "examples": {
-                  "Success": {
-                    "summary": "Successful response",
-                    "value": {
-                      "ai_generated_score": 0.85,
-                      "media_url": "https://example.com/media/image.jpg"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request due to invalid or missing parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "MissingParameter": {
-                    "summary": "Missing required parameter",
-                    "value": {
-                      "error": {
-                        "type": "MissingParameterError",
-                        "message": "Either image_url or media is required",
-                        "code": 3002
-                      }
-                    }
-                  },
-                  "InvalidParameter": {
-                    "summary": "Invalid parameter provided",
-                    "value": {
-                      "error": {
-                        "type": "InvalidParameterError",
-                        "message": "Provide either image_url or media, not both",
-                        "code": 3003
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized request due to invalid API key.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Unauthorized": {
-                    "summary": "Invalid API key",
-                    "value": {
-                      "error": {
-                        "type": "UnauthorizedError",
-                        "message": "Unauthorized: Invalid API key",
-                        "code": 2001
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "InternalError": {
-                    "summary": "Internal server error",
-                    "value": {
-                      "error": {
-                        "type": "InternalError",
-                        "message": "An unexpected error occurred while processing your request.",
-                        "code": 9999
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "504": {
-            "description": "Gateway timeout.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "TimeoutError": {
-                    "summary": "Request timed out",
-                    "value": {
-                      "error": {
-                        "type": "TimeoutError",
-                        "message": "API request timed out",
-                        "code": 1005
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "ApiKeyAuth": []
-          },
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
-    "/text": {
-      "post": {
-        "summary": "Analyze text to determine if it is AI-generated.",
-        "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided. The priority is as follows: `website` > `file` > `text`.",
-        "operationId": "analyzeText",
-        "tags": [
-          "Text Analysis"
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "cURL",
-            "label": "cURL",
-            "source": "curl -X POST \"https://api.baselined.ai/text\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"text\":\"Your text content here.\"}'"
-          },
-          {
-            "lang": "Python",
-            "label": "Python",
-            "source": "import requests\n\nurl = \"https://api.baselined.ai/text\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"text\": \"Your text content here.\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
-          }
-        ],
-        "requestBody": {
-          "description": "Text to analyze along with optional parameters. Provide either `text`, `file`, or `website`. If multiple are provided, the priority is `website` > `file` > `text`.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "text": {
-                    "type": "string",
-                    "description": "The text content to analyze."
-                  },
-                  "file": {
-                    "type": "string",
-                    "description": "A file to scan. The file must be in plain .pdf, .doc, or .docx format. Has higher priority than `text` if both are provided."
-                  },
-                  "website": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "A website URL to scan. Must be publicly accessible. Has the highest priority over `text` or `file`."
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "The model version to use. \"latest\" always uses the latest version. Options: 3.0, 2.0, latest.",
-                    "default": "2.0",
-                    "enum": ["3.0", "2.0", "latest"]
-                  },
-                  "sentences": {
-                    "type": "boolean",
-                    "description": "Whether the response should include an array of sentences and their scores.",
-                    "default": true
-                  },
-                  "language": {
-                    "type": "string",
-                    "description": "2 letter language code. Supported: en, fr, es, pt, nl, de, zh.",
-                    "default": "en",
-                    "enum": ["en", "fr", "es", "pt", "nl", "de", "zh"]
-                  }
-                },
-                "anyOf": [
-                  {
-                    "required": ["text"]
-                  },
-                  {
-                    "required": ["file"]
-                  },
-                  {
-                    "required": ["website"]
-                  }
-                ],
-                "additionalProperties": false
-              },
-              "examples": {
-                "Text": {
-                  "summary": "Provide text for analysis",
-                  "value": {
-                    "text": "Your text content here."
-                  }
-                },
-                "File": {
-                  "summary": "Provide file for analysis",
-                  "value": {
-                    "file": "https://example.com/document.pdf"
-                  }
-                },
-                "Website": {
-                  "summary": "Provide website URL for analysis",
-                  "value": {
-                    "website": "https://example.com"
-                  }
-                },
-                "WithOptionalParameters": {
-                  "summary": "Provide text with optional parameters",
-                  "value": {
-                    "text": "Your text content here.",
-                    "version": "3.0",
-                    "sentences": false,
-                    "language": "es"
-                  }
-                },
-                "MultipleInputs": {
-                  "summary": "Provide text, file, and website (priority applies)",
-                  "value": {
-                    "text": "Your text content here.",
-                    "file": "https://example.com/document.pdf",
-                    "website": "https://example.com",
-                    "version": "latest",
-                    "sentences": true,
-                    "language": "de"
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "AI-generated text analysis result.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "description": "HTTP status code indicating success (200)."
-                    },
-                    "score": {
-                      "type": "number",
-                      "format": "float",
-                      "description": "Confidence score that the text is AI-generated, ranging from 0 to 1. A higher score means the text is AI-generated."
-                    },
-                    "sentences": {
-                      "type": "array",
-                      "description": "An array of sentence objects with their respective AI-generated confidence scores.",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "text": {
-                            "type": "string",
-                            "description": "The text of the analyzed sentence."
-                          },
-                          "score": {
-                            "type": "number",
-                            "format": "float",
-                            "description": "Confidence score that this sentence is AI-generated, ranging from 0 to 1."
-                          }
+                  "oneOf": [
+                    {
+                      "required": ["image_url"],
+                      "properties": {
+                        "image_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "description": "URL of the image to analyze."
                         }
                       }
                     },
-                    "input": {
-                      "type": "string",
-                      "description": "The type of input scanned: `text`, `file`, or `website`."
+                    {
+                      "required": ["media"],
+                      "properties": {
+                        "media": {
+                          "type": "string",
+                          "description": "Base64-encoded image data."
+                        }
+                      }
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 },
                 "examples": {
-                  "Success": {
-                    "summary": "Successful response",
+                  "ImageURL": {
+                    "summary": "Provide image URL",
                     "value": {
-                      "status": 200,
-                      "score": 0.90,
-                      "sentences": [
-                        {
-                          "text": "This is a sample sentence.",
-                          "score": 0.95
-                        },
-                        {
-                          "text": "Another example sentence.",
-                          "score": 0.85
-                        }
-                      ],
-                      "input": "text"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request due to invalid or missing parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "InvalidRequestFormat": {
-                    "summary": "Invalid request format",
-                    "value": {
-                      "error": {
-                        "type": "InvalidRequestFormat",
-                        "message": "Invalid request format",
-                        "code": 3001
-                      }
+                      "image_url": "https://example.com/image.jpg"
                     }
                   },
-                  "MissingParameter": {
-                    "summary": "Missing required parameter",
+                  "Media": {
+                    "summary": "Provide base64-encoded image",
                     "value": {
-                      "error": {
-                        "type": "MissingParameterError",
-                        "message": "Either text, file, or website is required.",
-                        "code": 3002
-                      }
-                    }
-                  },
-                  "InvalidParameter": {
-                    "summary": "Multiple parameters provided",
-                    "value": {
-                      "error": {
-                        "type": "InvalidParameterError",
-                        "message": "Provide either text, file, or website, not multiple.",
-                        "code": 3003
-                      }
-                    }
-                  },
-                  "InvalidImageData": {
-                    "summary": "Invalid image data provided",
-                    "value": {
-                      "error": {
-                        "type": "InvalidImageData",
-                        "message": "The provided media data is not valid base64-encoded image data.",
-                        "code": 3004
-                      }
+                      "media": "iVBORw0KGgoAAAANSUhEUgAA..."
                     }
                   }
                 }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized request due to invalid API key.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "Unauthorized": {
-                    "summary": "Invalid API key",
-                    "value": {
-                      "error": {
-                        "type": "UnauthorizedError",
-                        "message": "Unauthorized: Invalid API key",
-                        "code": 2001
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "InternalError": {
-                    "summary": "Internal server error",
-                    "value": {
-                      "error": {
-                        "type": "InternalError",
-                        "message": "An unexpected error occurred while processing your request.",
-                        "code": 9999
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "504": {
-            "description": "Gateway timeout.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "TimeoutError": {
-                    "summary": "Request timed out",
-                    "value": {
-                      "error": {
-                        "type": "TimeoutError",
-                        "message": "API request timed out",
-                        "code": 1005
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "ApiKeyAuth": []
-          },
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Error": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "description": "Error type."
-              },
-              "message": {
-                "type": "string",
-                "description": "Error message providing additional details."
-              },
-              "code": {
-                "type": "integer",
-                "description": "Specific error code."
               }
             },
-            "required": ["type", "message", "code"]
-          }
-        },
-        "required": ["error"]
-      }
-    },
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-api-key",
-        "description": "A unique key used for authentication to access the API."
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "AI-generated image analysis result.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "score": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Confidence score that the image is AI-generated, ranging from 0 to 1. A higher score indicates that our system believes the text was written by AI, while a lower score suggests that the system believes the image was created by a non-generative AI source."
+                      },
+                      "media_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL of the analyzed image."
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "examples": {
+                    "Success": {
+                      "summary": "Successful response",
+                      "value": {
+                        "ai_generated_score": 0.85,
+                        "media_url": "https://example.com/media/image.jpg"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request due to invalid or missing parameters.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "MissingParameter": {
+                      "summary": "Missing required parameter",
+                      "value": {
+                        "error": {
+                          "type": "MissingParameterError",
+                          "message": "Either image_url or media is required",
+                          "code": 3002
+                        }
+                      }
+                    },
+                    "InvalidParameter": {
+                      "summary": "Invalid parameter provided",
+                      "value": {
+                        "error": {
+                          "type": "InvalidParameterError",
+                          "message": "Provide either image_url or media, not both",
+                          "code": 3003
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized request due to invalid API key.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "Unauthorized": {
+                      "summary": "Invalid API key",
+                      "value": {
+                        "error": {
+                          "type": "UnauthorizedError",
+                          "message": "Unauthorized: Invalid API key",
+                          "code": 2001
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "InternalError": {
+                      "summary": "Internal server error",
+                      "value": {
+                        "error": {
+                          "type": "InternalError",
+                          "message": "An unexpected error occurred while processing your request.",
+                          "code": 9999
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "504": {
+              "description": "Gateway timeout.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "TimeoutError": {
+                      "summary": "Request timed out",
+                      "value": {
+                        "error": {
+                          "type": "TimeoutError",
+                          "message": "API request timed out",
+                          "code": 1005
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": []
+            },
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
       },
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "Standard Authorization header using the Bearer scheme. Example: 'Authorization: Bearer YOUR_API_KEY'"
+      "/text": {
+        "post": {
+          "summary": "Analyze text to determine if it is AI-generated.",
+          "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided. The priority is as follows: `website` > `file` > `text`.",
+          "operationId": "analyzeText",
+          "tags": [
+            "Text Analysis"
+          ],
+          "x-codeSamples": [
+            {
+              "lang": "cURL",
+              "label": "cURL",
+              "source": "curl -X POST \"https://api.baselined.ai/text\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: YOUR_API_KEY\" \\\n  -d '{\"text\":\"Your text content here.\"}'"
+            },
+            {
+              "lang": "Python",
+              "label": "Python",
+              "source": "import requests\n\nurl = \"https://api.baselined.ai/text\"\nheaders = {\"x-api-key\": \"YOUR_API_KEY\", \"Content-Type\": \"application/json\"}\npayload = {\"text\": \"Your text content here.\"}\nresponse = requests.post(url, json=payload, headers=headers)\nprint(response.json())"
+            }
+          ],
+          "requestBody": {
+            "description": "Text to analyze along with optional parameters. Provide either `text`, `file`, or `website`. If multiple are provided, the priority is `website` > `file` > `text`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "description": "The text content to analyze."
+                    },
+                    "file": {
+                      "type": "string",
+                      "description": "A file to scan. The file must be in plain .pdf, .doc, or .docx format. Has higher priority than `text` if both are provided."
+                    },
+                    "website": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "A website URL to scan. Must be publicly accessible. Has the highest priority over `text` or `file`."
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "The model version to use. \"latest\" always uses the latest version. Options: 3.0, 2.0, latest.",
+                      "default": "2.0",
+                      "enum": ["3.0", "2.0", "latest"]
+                    },
+                    "sentences": {
+                      "type": "boolean",
+                      "description": "Whether the response should include an array of sentences and their scores.",
+                      "default": true
+                    },
+                    "language": {
+                      "type": "string",
+                      "description": "2 letter language code. Supported: en, fr, es, pt, nl, de, zh.",
+                      "default": "en",
+                      "enum": ["en", "fr", "es", "pt", "nl", "de", "zh"]
+                    }
+                  },
+                  "anyOf": [
+                    {
+                      "required": ["text"]
+                    },
+                    {
+                      "required": ["file"]
+                    },
+                    {
+                      "required": ["website"]
+                    }
+                  ],
+                  "additionalProperties": false
+                },
+                "examples": {
+                  "Text": {
+                    "summary": "Provide text for analysis",
+                    "value": {
+                      "text": "Your text content here."
+                    }
+                  },
+                  "File": {
+                    "summary": "Provide file for analysis",
+                    "value": {
+                      "file": "https://example.com/document.pdf"
+                    }
+                  },
+                  "Website": {
+                    "summary": "Provide website URL for analysis",
+                    "value": {
+                      "website": "https://example.com"
+                    }
+                  },
+                  "WithOptionalParameters": {
+                    "summary": "Provide text with optional parameters",
+                    "value": {
+                      "text": "Your text content here.",
+                      "version": "3.0",
+                      "sentences": false,
+                      "language": "es"
+                    }
+                  },
+                  "MultipleInputs": {
+                    "summary": "Provide text, file, and website (priority applies)",
+                    "value": {
+                      "text": "Your text content here.",
+                      "file": "https://example.com/document.pdf",
+                      "website": "https://example.com",
+                      "version": "latest",
+                      "sentences": true,
+                      "language": "de"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "AI-generated text analysis result.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "integer",
+                        "description": "HTTP status code indicating success (200)."
+                      },
+                      "score": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Confidence score that the text is AI-generated, ranging from 0 to 1. Confidence score that the image is AI-generated, ranging from 0 to 1. A higher score means our system believes that the text is written by AI, and a lower score means that the system believes that the text is written by a Human."
+                      },
+                      "sentences": {
+                        "type": "array",
+                        "description": "An array of sentence objects with their respective AI-generated confidence scores.",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "description": "The text of the analyzed sentence."
+                            },
+                            "score": {
+                              "type": "number",
+                              "format": "float",
+                              "description": "Confidence score that this sentence is AI-generated, ranging from 0 to 1."
+                            }
+                          }
+                        }
+                      },
+                      "input": {
+                        "type": "string",
+                        "description": "The type of input scanned: `text`, `file`, or `website`."
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "examples": {
+                    "Success": {
+                      "summary": "Successful response",
+                      "value": {
+                        "status": 200,
+                        "score": 0.90,
+                        "sentences": [
+                          {
+                            "text": "This is a sample sentence.",
+                            "score": 0.95
+                          },
+                          {
+                            "text": "Another example sentence.",
+                            "score": 0.85
+                          }
+                        ],
+                        "input": "text"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request due to invalid or missing parameters.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "InvalidRequestFormat": {
+                      "summary": "Invalid request format",
+                      "value": {
+                        "error": {
+                          "type": "InvalidRequestFormat",
+                          "message": "Invalid request format",
+                          "code": 3001
+                        }
+                      }
+                    },
+                    "MissingParameter": {
+                      "summary": "Missing required parameter",
+                      "value": {
+                        "error": {
+                          "type": "MissingParameterError",
+                          "message": "Either text, file, or website is required.",
+                          "code": 3002
+                        }
+                      }
+                    },
+                    "InvalidParameter": {
+                      "summary": "Multiple parameters provided",
+                      "value": {
+                        "error": {
+                          "type": "InvalidParameterError",
+                          "message": "Provide either text, file, or website, not multiple.",
+                          "code": 3003
+                        }
+                      }
+                    },
+                    "InvalidImageData": {
+                      "summary": "Invalid image data provided",
+                      "value": {
+                        "error": {
+                          "type": "InvalidImageData",
+                          "message": "The provided media data is not valid base64-encoded image data.",
+                          "code": 3004
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized request due to invalid API key.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "Unauthorized": {
+                      "summary": "Invalid API key",
+                      "value": {
+                        "error": {
+                          "type": "UnauthorizedError",
+                          "message": "Unauthorized: Invalid API key",
+                          "code": 2001
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "InternalError": {
+                      "summary": "Internal server error",
+                      "value": {
+                        "error": {
+                          "type": "InternalError",
+                          "message": "An unexpected error occurred while processing your request.",
+                          "code": 9999
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "504": {
+              "description": "Gateway timeout.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "examples": {
+                    "TimeoutError": {
+                      "summary": "Request timed out",
+                      "value": {
+                        "error": {
+                          "type": "TimeoutError",
+                          "message": "API request timed out",
+                          "code": 1005
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": []
+            },
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
       }
-    }
-  },
-  "tags": [
-    {
-      "name": "Image Analysis",
-      "description": "Endpoints related to image AI-generated content detection."
     },
-    {
-      "name": "Text Analysis",
-      "description": "Endpoints related to text AI-generated content detection."
-    }
-  ]
-}
+    "components": {
+      "schemas": {
+        "Error": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Error type."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Error message providing additional details."
+                },
+                "code": {
+                  "type": "integer",
+                  "description": "Specific error code."
+                }
+              },
+              "required": ["type", "message", "code"]
+            }
+          },
+          "required": ["error"]
+        }
+      },
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "x-api-key",
+          "description": "A unique key used for authentication to access the API."
+        },
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "description": "Standard Authorization header using the Bearer scheme. Example: 'Authorization: Bearer YOUR_API_KEY'"
+        }
+      }
+    },
+    "tags": [
+      {
+        "name": "Image Analysis",
+        "description": "Endpoints related to image AI-generated content detection."
+      },
+      {
+        "name": "Text Analysis",
+        "description": "Endpoints related to text AI-generated content detection."
+      }
+    ]
+  }
