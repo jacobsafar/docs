@@ -4,7 +4,7 @@ title: "Introduction"
 
 ## Welcome
 
-A [Baselined.ai](https://app.theneo.io/093fb6d6-e0f1-4bfa-b212-450b11d9bde1/baselined-ai/) account is required to create your API key for authorization. If you do not already have one, please [create an account](https://www.baselined.ai/register). Once registered, you will be able to view your API key on your [dashboard](https://www.baselined.ai/dashboard).
+A [Baselined.ai](https://www.baselined.ai/) account is required to create your API key for authorization. If you do not already have one, please [create an account](https://www.baselined.ai/register). Once registered, you will be able to view your API key on your [dashboard](https://www.baselined.ai/dashboard).
 
 <Card title="Developer Dashboard" icon="badge" color="blue" href="https://www.baselined.ai/dashboard">
   Register for an account to get your API key. A credit card is required.
@@ -12,12 +12,10 @@ A [Baselined.ai](https://app.theneo.io/093fb6d6-e0f1-4bfa-b212-450b11d9bde1/bas
 
 ## Authentication
 
-All API endpoints are authenticated using API Keys. You can find your API Key on the [Baselined.ai Developer Dashboard](https://www.baselined.ai/dashboard).
+All API endpoints are authenticated using either an API Key or a Bearer token. You can find your credentials on the [Baselined.ai Developer Dashboard](https://www.baselined.ai/dashboard).
 
-```json
-"security": [
-  {
-    "x-api-key": []
-  }
-]
-```
+You can pass your credentials in one of the following ways:
+
+- Using an API Key:
+  ```http
+  x-api-key: YOUR_API_KEY
