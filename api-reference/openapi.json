@@ -214,11 +214,11 @@
     "/text": {
       "post": {
         "summary": "Analyze text to determine if it is AI-generated.",
-        "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided.",
+        "description": "Analyzes text to determine the confidence that it is AI-generated. You can provide `text`, `file`, or `website`, along with optional parameters like `version`, `sentences`, and `language`. At least one of `text`, `file`, or `website` must be provided. The priority is as follows: `website` > `file` > `text`.",
         "operationId": "analyzeText",
         "tags": ["Text Analysis"],
         "requestBody": {
-          "description": "Text to analyze along with optional parameters.",
+          "description": "Text to analyze along with optional parameters. Provide either `text`, `file`, or `website`. If multiple are provided, the priority is `website` > `file` > `text`.",
           "content": {
             "application/json": {
               "schema": {
@@ -230,29 +230,32 @@
                   },
                   "file": {
                     "type": "string",
-                    "description": "URL or identifier for a file to analyze."
+                    "description": "A file to scan. If you supply a file, the API will scan the content of the file. The file must be in plain .pdf, .doc or .docx format. The file has priority over the text, so if you give a text and a file, it's the file that will be scanned."
                   },
                   "website": {
                     "type": "string",
-                    "description": "URL of the website to analyze."
+                    "format": "uri",
+                    "description": "A website URL to scan. If you supply a website, the API will fetch the content of the website and scan it. The website must be publicly accessible. It's important to know that the website has priority over the text and the file, so if you give a text, a file and a website, it's the website that will be scanned."
                   },
                   "version": {
                     "type": "string",
-                    "description": "Version of the analysis model to use.",
-                    "default": "2.0"
+                    "description": "The model version to use. Our latest and most accurate version is \"3.0\". Using \"latest\" will make sure you are always using the latest version. Options: 3.0, 2.0, latest.",
+                    "default": "2.0",
+                    "enum": ["3.0", "2.0", "latest"]
                   },
                   "sentences": {
                     "type": "boolean",
-                    "description": "Whether to analyze sentences individually.",
+                    "description": "Whether the response should include an array of sentences and their scores.",
                     "default": true
                   },
                   "language": {
                     "type": "string",
-                    "description": "Language of the text.",
-                    "default": "en"
+                    "description": "2 letter language code. Available languages: english (en), french (fr), spanish (es), portuguese (pt), netherlands (nl), german (de), and chinese simplified (zh).",
+                    "default": "en",
+                    "enum": ["en", "fr", "es", "pt", "nl", "de", "zh"]
                   }
                 },
-                "oneOf": [
+                "anyOf": [
                   {
                     "required": ["text"]
                   },
@@ -288,9 +291,20 @@
                   "summary": "Provide text with optional parameters",
                   "value": {
                     "text": "Your text content here.",
-                    "version": "2.1",
+                    "version": "3.0",
                     "sentences": false,
                     "language": "es"
+                  }
+                },
+                "MultipleInputs": {
+                  "summary": "Provide text, file, and website (priority applies)",
+                  "value": {
+                    "text": "Your text content here.",
+                    "file": "https://example.com/document.pdf",
+                    "website": "https://example.com",
+                    "version": "latest",
+                    "sentences": true,
+                    "language": "de"
                   }
                 }
               }
@@ -306,24 +320,66 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "ai_generated_score": {
-                      "type": "number",
-                      "format": "float",
-                      "description": "Confidence score that the text is AI-generated, ranging from 0 to 1."
+                    "status": {
+                      "type": "integer",
+                      "description": "This is a standard HTTP status code. A 200 status means the request was successful."
                     },
-                    "input_text": {
+                    "score": {
+                      "type": "integer",
+                      "description": "A \"human\" score between 0 and 100. A low score means our system believes that the text is written by AI, and a higher score means that the system believes that the text is written by a Human."
+                    },
+                    "sentences": {
+                      "type": "array",
+                      "description": "An array of sentence objects. Each object contains two fields: text and score. Please note that assessments on smaller samples are less accurate than the general score.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string",
+                            "description": "The text of the analyzed sentence."
+                          },
+                          "score": {
+                            "type": "integer",
+                            "description": "The sentiment score assigned to this sentence by the AI."
+                          }
+                        },
+                        "required": ["text", "score"]
+                      }
+                    },
+                    "input": {
                       "type": "string",
-                      "description": "The analyzed text content."
+                      "description": "The type of input scanned based on the input provided. It can be `text`, `file`, or `website`."
+                    },
+                    "credits_used": {
+                      "type": "integer",
+                      "description": "The number of credits consumed for processing your request. Each word processed by the API consumes one credit."
+                    },
+                    "credits_remaining": {
+                      "type": "integer",
+                      "description": "The number of credits you have left in your account after your request has been processed."
                     }
                   },
-                  "required": ["ai_generated_score", "input_text"]
+                  "required": ["status", "score", "input", "credits_used", "credits_remaining"]
                 },
                 "examples": {
                   "Success": {
                     "summary": "Successful response",
                     "value": {
-                      "ai_generated_score": 0.75,
-                      "input_text": "Your text content here."
+                      "status": 200,
+                      "score": 75,
+                      "sentences": [
+                        {
+                          "text": "This is a sample sentence.",
+                          "score": 80
+                        },
+                        {
+                          "text": "Another example sentence.",
+                          "score": 70
+                        }
+                      ],
+                      "input": "text",
+                      "credits_used": 100,
+                      "credits_remaining": 900
                     }
                   }
                 }
@@ -365,6 +421,16 @@
                         "type": "InvalidParameterError",
                         "message": "Provide either text, file, or website, not multiple.",
                         "code": 3003
+                      }
+                    }
+                  },
+                  "InvalidImageData": {
+                    "summary": "Invalid image data provided",
+                    "value": {
+                      "error": {
+                        "type": "InvalidImageData",
+                        "message": "The provided media data is not valid base64-encoded image data.",
+                        "code": 3004
                       }
                     }
                   }
