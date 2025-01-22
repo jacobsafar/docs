@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.1",
     "info": {
-      "title": "Baselined.ai API",
-      "description": "Comprehensive API documentation for Baselined.ai endpoints, including image and text AI-generated content detection.",
+      "title": "Antigenailabs.com API",
+      "description": "Comprehensive API documentation for Antigenailabs.com endpoints, including image and text AI-generated content detection.",
       "license": {
         "name": "MIT"
       },
@@ -10,7 +10,7 @@
     },
     "servers": [
       {
-        "url": "https://api.baselined.ai"
+        "url": "https://api.antigenailabs.com"
       }
     ],
     "security": [

@@ -19,12 +19,12 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:support@baselined.ai"
+      "url": "mailto:support@antigenailabs.com"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://www.baselined.ai/dashboard"
+    "url": "https://www.antigenailabs.com/dashboard"
   },
   "tabs": [
     {
