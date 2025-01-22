@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="6202px" height="1179px" viewBox="0 0 6202 1179" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Group 9</title>
+<svg width="769px" height="114px" viewBox="0 0 769 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>dark</title>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-9" fill="#FFFFFF">
-            <text id="Baselined.ai" font-family="SFPro-Bold, SF Pro" font-size="988" font-weight="bold">
-                <tspan x="773.394531" y="941">Baselined.ai</tspan>
+        <g id="dark" transform="translate(3, 0)" fill="#FFFFFF">
+            <text id="Antigen-AI-Labs" fill-rule="nonzero" font-family="SpaceGrotesk-Light_Bold, Space Grotesk" font-size="89" font-weight="bold">
+                <tspan x="102" y="88">Antigen </tspan>
+                <tspan x="461.827" y="88" font-family="SpaceGrotesk-Light, Space Grotesk" font-weight="300">AI Labs</tspan>
             </text>
-            <g id="Group-8" transform="translate(0.000000, 245.000000)">
-                <rect id="Rectangle" x="399.294798" y="0" width="296.705202" height="296.705202"></rect>
-                <rect id="Rectangle" fill-opacity="0.25" x="103.595376" y="103.595376" width="193.109827" height="193.109827"></rect>
-                <rect id="Rectangle" fill-opacity="0.8" x="0" y="399.294798" width="296.705202" height="296.705202"></rect>
-                <rect id="Rectangle" fill-opacity="0.6" x="399.294798" y="399.294798" width="193.109827" height="193.109827"></rect>
+            <g id="Antigen-Black-Icon" transform="translate(0, 23)" stroke="#FFFFFF" stroke-width="3">
+                <polygon id="Path" points="28.9555564 1.81167616e-17 38 0.145783209 38 44.9424153 6.92950113 78 3.33212072e-16 72.6306751 27.380491 42.5202797"></polygon>
+                <polygon id="Path" transform="translate(66, 39) scale(-1, 1) translate(-66, -39)" points="75.9555564 1.81167616e-17 85 0.145783209 85 44.9424153 53.9295011 78 47 72.6306751 74.380491 42.5202797"></polygon>
             </g>
         </g>
     </g>
