@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Group 5</title>
+<svg width="1405px" height="1405px" viewBox="0 0 1405 1405" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>favicon</title>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-5">
-            <rect id="Rectangle" fill="#000000" transform="translate(512.000000, 512.000000) rotate(90.000000) translate(-512.000000, -512.000000) " x="0" y="0" width="1024" height="1024"></rect>
-            <g id="Group-8" transform="translate(205.000000, 205.000000)" fill="#FFFFFF">
-                <rect id="Rectangle" x="352" y="0" width="262" height="262"></rect>
-                <rect id="Rectangle" fill-opacity="0.25" x="92" y="92" width="170" height="170"></rect>
-                <rect id="Rectangle" fill-opacity="0.8" x="0" y="352" width="262" height="262"></rect>
-                <rect id="Rectangle" fill-opacity="0.6" x="352" y="352" width="170" height="170"></rect>
+        <g id="favicon">
+            <rect id="Rectangle" fill="#FFFFFF" x="0" y="0" width="1405" height="1405"></rect>
+            <g id="Antigen-Black-Icon" transform="translate(319, 351)" fill="#000000" stroke="#000000" stroke-width="3">
+                <polygon id="Path" points="261.281315 1.63515386e-16 342.894118 1.31578691 342.894118 405.634107 62.5285572 704 3.00674894e-15 655.538401 247.068666 383.77278"></polygon>
+                <polygon id="Path" transform="translate(595.5529, 352) scale(-1, 1) translate(-595.5529, -352)" points="685.387198 1.63515386e-16 767 1.31578691 767 405.634107 486.63444 704 424.105882 655.538401 671.174548 383.77278"></polygon>
             </g>
         </g>
     </g>
